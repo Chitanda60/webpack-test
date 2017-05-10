@@ -7,6 +7,7 @@ var px2rem = require('postcss-px2rem');
 var cssnano = require('cssnano')
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var extractCSS = new ExtractTextPlugin('./[name].css')
 
 module.exports = {
 // 程序的入口文件
@@ -18,7 +19,7 @@ module.exports = {
 // 生产环境下资源访问路径
         publicPath: path.resolve(__dirname, './'),
 // 所有打包好的资源的存放位置
-        path: '/public/build',
+        path: path.resolve(__dirname, './public/build'),
 // 生成的打包文件名
         filename: '[name].bundle.js'
     },
@@ -45,7 +46,7 @@ module.exports = {
                 test: /\.(scss)$/,
 // 多个加载器通过“!”连接
 // 第一个参数表示编译后经过style-loader单独提取出文件 第二个参数是loader
-                loader: ExtractTextPlugin.extract('style-loader', 'css!postcss!sass')
+                loader: extractCSS.extract(['css!postcss', 'sass'])
             },
             {
                 test: /\.(png|jpg)$/,
@@ -69,22 +70,24 @@ module.exports = {
             ]
         ]
     },   
-    postcss: [        
-        px2rem({
-            remUnit: 37.5
-        }),
-        cssnano({
-            sourcemap: true,
-            autoprefixer: {
-                add: true,
-                remove: true,
-                browsers: ['last 2 version', 'Chrome 31', 'Safari 8'],
-                discardComments: {
-                    removeAll: true,
+    postcss: function(){
+        return [        
+            px2rem({
+                remUnit: 37.5
+            }),
+            cssnano({
+                sourcemap: true,
+                autoprefixer: {
+                    add: true,
+                    remove: true,
+                    browsers: ['last 2 version', 'Chrome 31', 'Safari 8'],
+                    discardComments: {
+                        removeAll: true,
+                    }
                 }
-            }
-        })
-    ],   
+            })
+        ]
+    },   
     // 以脚本引用形式引进而不被打包进来
     externals: {
         'react': 'React',
@@ -111,7 +114,7 @@ module.exports = {
 
     // 插件
     plugins: [
-        new ExtractTextPlugin("styles.css"),
+        extractCSS,
 
         new webpack.BannerPlugin('This file is created by zhixia'),
         //提取多个入口文件的公共脚本部分，打包成一个资源文件方便多页面复用
