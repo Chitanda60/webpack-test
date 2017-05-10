@@ -9,9 +9,9 @@ module.exports = {
     },
     output: {
 // 生产环境下资源访问路径
-        publicPath: './build/',
+        publicPath: path.resolve(__dirname, './'),
 // 所有打包好的资源的存放位置
-        path: './public/build',
+        path: '/public/build',
 // 生成的打包文件名
         filename: '[name].bundle.js'
     },
@@ -60,12 +60,16 @@ module.exports = {
     externals: {
         'react': 'React',
         'react-dom': 'ReactDOM'
-    },
+    },    
     // 插件
     plugins: [
         new webpack.BannerPlugin('This file is created by zhixia'),
         //提取多个入口文件的公共脚本部分，打包成一个资源文件方便多页面复用
-        new webpack.optimize.CommonsChunkPlugin({name: 'commons'})
+        new webpack.optimize.CommonsChunkPlugin({name: 'commons'}),
+        // 定义全局常量
+        new webpack.DefinePlugin({
+            __DEV__: true
+        })
     ],
     // 预加载
     preLoaders: [{
