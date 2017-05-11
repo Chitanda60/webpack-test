@@ -10,10 +10,10 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var extractCSS = new ExtractTextPlugin('./[name].css')
 
 module.exports = {
+    devtool: '#source-map',
 // 程序的入口文件
     entry: {
-        "entry":'./src/app.js',
-        // "entry2":'./src/app2.js'
+        app: './src/app.js'
     },
     output: {
 // 生产环境下资源访问路径
@@ -100,25 +100,27 @@ module.exports = {
     //     loader: 'jsxhint'
     // }],
     // 模块解析处理细节（文件路径指向，加快打包过程）
-    resolve: {
-        alias: {
-            js: path.join(__dirname, "./asset/js"),
-            css: path.join(__dirname, "./asset/css"),
-            img: path.join(__dirname, "./asset/img")
-        },
+    // resolve: {
+        // alias: {
+        //     js: path.join(__dirname, "./asset/js"),
+        //     css: path.join(__dirname, "./asset/css"),
+        //     img: path.join(__dirname, "./asset/img")
+        // },
         //添加默认搜索路径
-        root: [
-            path.join(__dirname, "asset")
-        ]
-    },
+        // root: [
+        //     path.join(__dirname, "asset")
+        // ]
+    // },
 
     // 插件
     plugins: [
         extractCSS,
 
-        new webpack.BannerPlugin('This file is created by zhixia'),
+        // new webpack.BannerPlugin('This file is created by zhixia'),
         //提取多个入口文件的公共脚本部分，打包成一个资源文件方便多页面复用
-        new webpack.optimize.CommonsChunkPlugin({name: 'commons'}),
+        new webpack.optimize.CommonsChunkPlugin({name: 'commons'}),        
+        // 跳过编译错误        
+        new webpack.NoErrorsPlugin()
     ],    
     
     // 转码规则，如 插件配置

@@ -12,6 +12,9 @@ module.exports = merge(baseConfig, {
         new webpack.DefinePlugin({
             __DEV__: false
         }),
+        // 按chunk引用次数分配id 排序输出
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        // 压缩
         new webpack.optimize.UglifyJsPlugin({
             minimize: true,
             compress: {
