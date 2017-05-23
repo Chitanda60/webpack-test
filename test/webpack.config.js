@@ -13,7 +13,7 @@ module.exports = {
     devtool: '#source-map',
 // 程序的入口文件
     entry: {
-        app: './src/app.js'
+        app: './index.js'
     },
     output: {
 // 生产环境下资源访问路径
@@ -62,12 +62,13 @@ module.exports = {
         plugins: [
             'transform-class-properties',
             // 'transform-async-to-generator',
-            // [
-            //     'transform-runtime',
-            //     {
-            //         'regenerator': true
-            //     }
-            // ]
+            // 'syntax-async-functions',
+            [
+                'transform-runtime',
+                {
+                    'regenerator': true
+                }
+            ]
         ]
     },   
     postcss: function(){
@@ -120,7 +121,14 @@ module.exports = {
         //提取多个入口文件的公共脚本部分，打包成一个资源文件方便多页面复用
         new webpack.optimize.CommonsChunkPlugin({name: 'commons'}),        
         // 跳过编译错误        
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+
+        new webpack.DefinePlugin({
+            __DEV__: true
+        }),
+        // 模块热替换
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],    
     
     // 转码规则，如 插件配置
